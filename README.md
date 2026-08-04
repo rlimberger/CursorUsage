@@ -1,30 +1,31 @@
-# CursorUsage
+<p align="center">
+  <img src="Sources/CursorUsage/Resources/CursorIcon.png" width="72" alt="CursorUsage">
+</p>
 
-macOS menu bar app for your [Cursor](https://cursor.com) plan usage.
+<h1 align="center">CursorUsage</h1>
 
-Shows **Cursor Models** %, **Other Models** %, and days until the billing cycle resets — the same two pools as Cursor Settings → Usage.
+<p align="center">
+  Cursor plan usage in your macOS menu bar
+</p>
 
-```
-[icon]  14%  85%  13d
-```
+<p align="center">
+  <a href="https://github.com/rlimberger/CursorUsage/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="https://developer.apple.com/macos/"><img src="https://img.shields.io/badge/macOS-14%2B-black.svg" alt="macOS 14+"></a>
+  <a href="https://www.swift.org"><img src="https://img.shields.io/badge/Swift-6-F05138.svg" alt="Swift 6"></a>
+  <a href="https://cursor.com"><img src="https://img.shields.io/badge/Cursor-Ultra%20%2F%20Pro-6B7280.svg" alt="Cursor"></a>
+</p>
 
-Click the item for progress bars, plan name, refresh, and a link to the dashboard.
+<p align="center">
+  <img src="docs/menubar.png" alt="Menu bar: icon, Cursor Models %, Other Models %, days until reset">
+</p>
 
-## Features
+<p align="center">
+  <img src="docs/usage-panel.png" width="640" alt="Matches Cursor Settings → Usage pools">
+</p>
 
-- **Live usage** from Cursor’s usage API (no separate login — reuses your IDE session)
-- **Menu bar glyph** — Cursor icon, Cursor Models %, Other Models %, reset countdown
-- **Popover** — Ultra/Pro-style bars matching the in-app Usage panel
-- **Open at Login** — registers automatically; toggle in the popover
-- **Cursor-aware** — menu bar item appears only while Cursor is running (helper stays in the background)
+See **Cursor Models** %, **Other Models** %, and days until reset without opening Cursor Settings. Same two usage pools as the in-app Usage panel.
 
-## Requirements
-
-- macOS 14+
-- [Xcode](https://developer.apple.com/xcode/) or Xcode beta (full toolchain; bare Command Line Tools are not enough for SwiftUI macros)
-- Cursor installed and signed in
-
-## Install
+## Quick start
 
 ```bash
 git clone https://github.com/rlimberger/CursorUsage.git
@@ -32,48 +33,85 @@ cd CursorUsage
 ./scripts/build-app.sh install
 ```
 
-This builds a release app, copies it to `~/Applications/CursorUsage.app`, enables Open at Login, and launches it.
+Builds a release app, installs to `~/Applications/CursorUsage.app`, enables **Open at Login**, and launches.
 
-Build only (no install):
+> Requires [Xcode](https://developer.apple.com/xcode/) or Xcode beta (macOS 14+). Bare Command Line Tools are not enough.
 
-```bash
-./scripts/build-app.sh
-open dist/CursorUsage.app
+## Features
+
+| | |
+| --- | --- |
+| **Live menu bar** | `icon → Cursor % → API % → days` at system menu-bar font size |
+| **Popover** | Progress bars, plan name, refresh, dashboard link |
+| **No extra login** | Reuses the session from the Cursor IDE |
+| **Open at Login** | Registered on first launch (toggle in the popover) |
+| **Cursor-aware** | Item shows only while Cursor is running |
+
+## Usage
+
+1. Sign in to Cursor as usual.
+2. Keep CursorUsage running (it starts at login by default).
+3. When Cursor is open, the menu bar shows usage; click for details.
+
+```
+[◆]  14%  85%  13d
+      │    │    └─ days until billing cycle resets
+      │    └─ Other Models (API / named models)
+      └─ Cursor Models (e.g. Grok / Composer)
 ```
 
-The build script prefers `/Applications/Xcode-beta.app`, then `/Applications/Xcode.app`. Override with:
+**Quit:** popover → Quit, or `killall CursorUsage`.
+
+## How it works
+
+1. Reads your access token (read-only) from  
+   `~/Library/Application Support/Cursor/User/globalStorage/state.vscdb`
+2. Calls Cursor’s `GetCurrentPeriodUsage` API with that token
+3. Maps `autoPercentUsed` → Cursor Models, `apiPercentUsed` → Other Models
+4. Refreshes every 5 minutes (or on **Refresh**)
+
+Uses an **undocumented** Cursor API. It may change without notice. Not affiliated with Anysphere / Cursor.
+
+## Build options
+
+```bash
+# Build only → dist/CursorUsage.app
+./scripts/build-app.sh
+
+# Build + install + launch
+./scripts/build-app.sh install
+```
+
+The script prefers `/Applications/Xcode-beta.app`, then `/Applications/Xcode.app`:
 
 ```bash
 export DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer
 ```
 
-## How it works
-
-1. Reads your Cursor access token (read-only) from  
-   `~/Library/Application Support/Cursor/User/globalStorage/state.vscdb`  
-   (`cursorAuth/accessToken`)
-2. Calls Cursor’s internal `GetCurrentPeriodUsage` endpoint
-3. Maps `autoPercentUsed` → Cursor Models, `apiPercentUsed` → Other Models
-4. Refreshes every 5 minutes, or when you click **Refresh**
-
-> Uses an **undocumented** Cursor API. It may change or break without notice. This project is not affiliated with Anysphere / Cursor.
-
 ## Privacy
 
-- Token never leaves your machine except as a Bearer credential to Cursor’s own API
+- Token is only sent to Cursor’s own API as a Bearer credential
 - No third-party analytics or servers
-- Local SQLite access is read-only
+- Local database access is read-only
 
-## Quit
+## FAQ
 
-Popover → **Quit**, or:
+**Nothing appears in the menu bar**  
+CursorUsage only inserts the item while **Cursor.app** is running. Open Cursor, or check System Settings → Menu Bar if macOS is hiding the item.
 
-```bash
-killall CursorUsage
-```
+**Open at Login didn’t stick**  
+Enable **CursorUsage** under System Settings → General → Login Items (SMAppService sometimes needs approval).
 
-It starts again at the next login unless you turn off **Open at Login**.
+**Numbers look wrong / failed to load**  
+Sign out and back into Cursor, then click **Refresh**. The local session token may have expired.
+
+**Is this official?**  
+No. Community tool that scrapes the same usage data the IDE already uses.
+
+## Contributing
+
+Issues and PRs are welcome for bugs and small improvements. Please open an issue before large design changes.
 
 ## License
 
-MIT
+[MIT](LICENSE) © Rene Limberger
