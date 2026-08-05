@@ -25,7 +25,7 @@
 
 See **Cursor Models** %, **Other Models** %, and days until reset without opening Cursor Settings. Same two usage pools as the in-app Usage panel.
 
-**Omarchy / Linux:** the Waybar port lives in [`omarchy/`](omarchy/) (Rust binary + Waybar module). Intended to move to its own repo (`cursor-usage-omarchy`) once that GitHub repo exists.
+**Omarchy / Linux:** Waybar port is staged in [`omarchy/`](omarchy/) and will live at [rlimberger/cursor-usage-omarchy](https://github.com/rlimberger/cursor-usage-omarchy) once the Cursor GitHub App can push there (see [`omarchy/SPLIT_REPO.md`](omarchy/SPLIT_REPO.md)).
 
 ## Quick start
 

@@ -1,15 +1,24 @@
 # Splitting into `cursor-usage-omarchy`
 
-This directory is a self-contained Rust + Waybar project. The cloud agent could not create a new GitHub repository with the available token (`createRepository` is forbidden for the integration).
+Target repo (empty): https://github.com/rlimberger/cursor-usage-omarchy
 
-To publish as its own repo:
+The cloud agent **cannot push** there yet: the Cursor GitHub App installation only
+includes `rlimberger/CursorUsage` (push returns `Permission denied to cursor[bot]`).
+
+## Option A — grant access, then ask the agent to push (preferred)
+
+1. GitHub → **Settings** → **Applications** → **Installed GitHub Apps** → **Cursor**
+2. **Configure** → Repository access → add **`cursor-usage-omarchy`** (or “All repositories”)
+3. Reply in the agent chat: “access granted — push”
+
+The agent will push the standalone history to `main`.
+
+## Option B — push yourself from this staging folder
 
 ```bash
-# 1. Create an empty public repo on GitHub:
-#    https://github.com/new  →  rlimberger/cursor-usage-omarchy
-
-# 2. Push this tree as main:
-cd omarchy
+git clone -b cursor/omarchy-waybar-2d7a https://github.com/rlimberger/CursorUsage.git /tmp/CursorUsage
+cd /tmp/CursorUsage/omarchy
+rm -f SPLIT_REPO.md
 git init -b main
 git add -A
 git commit -m "Initial Omarchy Waybar port of CursorUsage."
@@ -17,5 +26,4 @@ git remote add origin https://github.com/rlimberger/cursor-usage-omarchy.git
 git push -u origin main
 ```
 
-A ready-to-push copy of this project (with history) also exists on the agent VM at
-`/home/ubuntu/cursor-usage-omarchy` for the duration of that run.
+After `main` exists on the new repo, this `omarchy/` staging directory can be removed from CursorUsage.
