@@ -1,0 +1,27 @@
+[package]
+name = "cursor-usage-waybar"
+version = "0.1.0"
+edition = "2021"
+description = "Cursor plan usage for Omarchy Waybar"
+license = "MIT"
+repository = "https://github.com/rlimberger/cursor-usage-omarchy"
+readme = "README.md"
+keywords = ["cursor", "waybar", "omarchy", "hyprland"]
+categories = ["command-line-utilities"]
+
+[[bin]]
+name = "cursor-usage-waybar"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+clap = { version = "4", features = ["derive"] }
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3"

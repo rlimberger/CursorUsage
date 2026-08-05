@@ -1,0 +1,11 @@
+{
+  "custom/cursor-usage": {
+    "exec": "cursor-usage-waybar",
+    "return-type": "json",
+    "interval": 300,
+    "format": "{}",
+    "tooltip": true,
+    "on-click": "cursor-usage-waybar open",
+    "on-click-right": "cursor-usage-waybar notify"
+  }
+}
