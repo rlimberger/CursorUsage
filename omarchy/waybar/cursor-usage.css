@@ -1,0 +1,23 @@
+/* Drop into ~/.config/waybar/style.css or import from there. */
+
+#custom-cursor-usage {
+  margin: 0 7.5px;
+  padding: 0 4px;
+}
+
+#custom-cursor-usage.warning {
+  color: #e0af68;
+}
+
+#custom-cursor-usage.critical {
+  color: #f7768e;
+}
+
+#custom-cursor-usage.error {
+  color: #f7768e;
+}
+
+#custom-cursor-usage.hidden {
+  margin: 0;
+  padding: 0;
+}
