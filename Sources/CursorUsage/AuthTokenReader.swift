@@ -30,11 +30,14 @@ enum AuthTokenReader {
         // Prefer a fresh snapshot if WAL is mid-write.
         _ = sqlite3_exec(db, "PRAGMA query_only = ON;", nil, nil, nil)
 
-        guard let accessToken = stringValue(db: db, key: "cursorAuth/accessToken"),
-              !accessToken.isEmpty
+        guard let rawToken = stringValue(db: db, key: "cursorAuth/accessToken"),
+              !rawToken.isEmpty
         else {
             throw UsageError.missingAccessToken
         }
+
+        // Cursor 3.27+ may store Electron safeStorage ciphertext instead of a JWT.
+        let accessToken = try CursorSafeStorage.resolveAccessToken(rawToken)
 
         let membership = stringValue(db: db, key: "cursorAuth/stripeMembershipType")
         let email = stringValue(db: db, key: "cursorAuth/cachedEmail")

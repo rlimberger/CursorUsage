@@ -18,6 +18,9 @@ enum UsageError: LocalizedError {
     case badHTTPStatus(Int)
     case decodeFailed
     case notAuthenticated
+    case keychainItemMissing
+    case keychainAccessDenied
+    case tokenDecryptFailed
 
     var errorDescription: String? {
         switch self {
@@ -33,6 +36,12 @@ enum UsageError: LocalizedError {
             return "Could not parse usage response."
         case .notAuthenticated:
             return "Cursor session expired. Sign in to Cursor again."
+        case .keychainItemMissing:
+            return "Cursor Safe Storage key not found in Keychain. Open Cursor once while signed in, then Refresh."
+        case .keychainAccessDenied:
+            return "Keychain access denied. Click Refresh and choose Allow / Always Allow for “Cursor Safe Storage”."
+        case .tokenDecryptFailed:
+            return "Could not decrypt Cursor’s access token. Update CursorUsage, or sign out/in of Cursor."
         }
     }
 }
