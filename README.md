@@ -105,6 +105,9 @@ Enable **CursorUsage** under System Settings → General → Login Items (SMAppS
 **Numbers look wrong / failed to load**  
 Sign out and back into Cursor, then click **Refresh**. The local session token may have expired.
 
+**“Cursor session expired” after Cursor 3.27+**  
+Newer Cursor builds encrypt the local access token (`cursor-safe-storage:v1:`). CursorUsage decrypts it with the **Cursor Safe Storage** Keychain item. On first Refresh, macOS may ask for Keychain access — choose **Always Allow**.
+
 **Is this official?**  
 No. Community tool that scrapes the same usage data the IDE already uses.
 
